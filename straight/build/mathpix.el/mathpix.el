@@ -1,0 +1,1 @@
+/home/ik/.emacs.d/straight/repos/mathpix.el/mathpix.el

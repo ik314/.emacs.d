@@ -1,0 +1,4 @@
+# key: normpdf
+# name: Normal Distribution PDF
+# --
+\frac{1}{2\pi \sigma^2} e^{-\frac{${1:(x_{$2} - \mu)}}{${3:\sigma^2}}}

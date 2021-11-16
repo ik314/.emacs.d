@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: high dimensional reals
+# key: rrn
+# --
+\\mathbb{R}^{${$1:n}}

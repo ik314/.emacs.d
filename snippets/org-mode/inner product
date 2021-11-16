@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: inner product
+# key: ip
+# --
+\left \langle $1, $2 \right \rangle

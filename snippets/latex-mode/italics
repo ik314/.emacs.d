@@ -1,0 +1,4 @@
+# key: it
+# name: italics
+# --
+\textit{$1}

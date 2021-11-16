@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: iid
+# key: iid
+# --
+\stackrel{\text{iid}}{\sim}

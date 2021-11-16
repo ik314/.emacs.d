@@ -1,0 +1,18 @@
+#+TITLE: Deft and its extensions
+#+AUTHOR: Ismael Khan
+
+
+* Deft
+Utilizing Deft to extend org-roam, as it can provide a nice interface for viewing notes
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :ensure t
+    :after org
+    :bind
+    ("C-c n d" . deft)
+    :custom
+    (deft-recursive t)
+    (deft-use-filter-string-for-filename t)
+    (deft-default-extension "org")
+    (deft-directory org-roam-directory))
+#+END_SRC

@@ -1,0 +1,273 @@
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf6180a5">1. org-mode</a>
+<ul>
+<li><a href="#orga5fb08a">1.1. org-roam!</a></li>
+<li><a href="#org6b9f177">1.2. org-download</a></li>
+<li><a href="#orgb02b7b6">1.3. org-bullets</a></li>
+<li><a href="#orgf2ea24e">1.4. org-cliplink</a></li>
+<li><a href="#orgc112a44">1.5. org-agenda (General GTD Organization)</a></li>
+<li><a href="#org3603b27">1.6. Export Settings for LaTeX</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf6180a5" class="outline-2">
+<h2 id="orgf6180a5"><span class="section-number-2">1</span> org-mode</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+I would be lying if I said emacs was a good text editor out of the
+box. It's great when you configure it, sure, but why the hell would
+you bother doing that? Answer: Org mode. Look it up.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org</span> <span style="color: #a8a9eb;">:ensure</span> t
+  <span style="color: #a8a9eb;">:init</span>
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Proper code blocks</span>
+  (<span style="color: #85dacc;">setq</span> org-src-fontify-natively t)
+  (<span style="color: #85dacc;">setq</span> org-src-tab-acts-natively t)
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Babel languages</span>
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python  . t)
+     (shell   . t)
+     (C       . t)
+     (fortran . t)
+     (haskell . t)
+     (awk     . t)
+     (js      . t)
+     (R       . t)
+     (octave  . t)
+     (matlab  . t)
+     (perl    . t)
+     (gnuplot . t)
+     (latex   . t)
+     (emacs-lisp . t)))
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Agenda</span>
+  (<span style="color: #85dacc;">setq</span> org-log-done t)
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Encoding</span>
+  (<span style="color: #85dacc;">setq</span> org-export-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (set-charset-priority 'unicode)
+  (<span style="color: #85dacc;">setq</span> default-process-coding-system '(utf-8-unix . utf-8-unix))
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Don't allow editing of folded regions</span>
+  (<span style="color: #85dacc;">setq</span> org-catch-invisible-edits 'error)
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Start agenda on Monday</span>
+  (<span style="color: #85dacc;">setq</span> org-agenda-start-on-weekday 1)
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Enable indentation view, does not effect file</span>
+  (<span style="color: #85dacc;">setq</span> org-startup-indented t)
+  <span style="color: #72696a;">;; </span><span style="color: #72696a;">Attachments</span>
+  (<span style="color: #85dacc;">setq</span> org-id-method (<span style="color: #85dacc;">quote</span> uuidgen))
+  (<span style="color: #85dacc;">setq</span> org-attach-directory <span style="color: #f9cc6c;">"attach/"</span>)
+  <span style="color: #a8a9eb;">:bind</span>
+  ((<span style="color: #f9cc6c;">"\C-ca"</span> . org-agenda)
+   (<span style="color: #f9cc6c;">"\C-cl"</span> . org-store-link)
+   (<span style="color: #f9cc6c;">"\C-cc"</span> . org-capture))
+  )
+<span style="color: #a8a9eb;">:config</span>
+  (add-hook 'org-mode-hook (<span style="color: #85dacc;">lambda</span> () (org-bullets-mode 1)))
+
+(add-hook 'org-mode-hook #'(lambda ()
+                             <span style="color: #72696a;">;; </span><span style="color: #72696a;">make the lines in the buffer wrap around the edges of the screen.</span>
+                             <span style="color: #72696a;">;; </span><span style="color: #72696a;">to press C-c q  or fill-paragraph ever again!</span>
+                             (visual-line-mode)
+                             (org-indent-mode)))
+
+(add-hook 'org-mode-hook
+           (<span style="color: #85dacc;">lambda</span> ()
+           (define-key evil-normal-state-map (kbd <span style="color: #f9cc6c;">"TAB"</span>) 'org-cycle)))
+
+(<span style="color: #85dacc;">setq</span> company-global-modes '(not org-mode))
+
+(<span style="color: #85dacc;">setq</span> org-format-latex-options (plist-put org-format-latex-options <span style="color: #a8a9eb;">:scale</span> 1.5))
+</pre>
+</div>
+</div>
+<div id="outline-container-orga5fb08a" class="outline-3">
+<h3 id="orga5fb08a"><span class="section-number-3">1.1</span> org-roam!</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Developing an ecosystem, a second brain.
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org-roam</span>
+    <span style="color: #a8a9eb;">:ensure</span> t
+    <span style="color: #a8a9eb;">:custom</span>
+    (org-roam-directory (file-truename <span style="color: #f9cc6c;">"/home/ik/org-roam/"</span>))
+    <span style="color: #a8a9eb;">:bind</span> ((<span style="color: #f9cc6c;">"C-c n l"</span> . org-roam-buffer-toggle)
+           (<span style="color: #f9cc6c;">"C-c n f"</span> . org-roam-node-find)
+           (<span style="color: #f9cc6c;">"C-c n g"</span> . org-roam-graph)
+           (<span style="color: #f9cc6c;">"C-c n i"</span> . org-roam-node-insert)
+           (<span style="color: #f9cc6c;">"C-c n c"</span> . org-roam-capture)
+               (<span style="color: #f9cc6c;">"C-c n #"</span> . org-roam-tag-add)
+           <span style="color: #72696a;">;; </span><span style="color: #72696a;">Dailies</span>
+           (<span style="color: #f9cc6c;">"C-c n j"</span> . org-roam-dailies-capture-today))
+    <span style="color: #a8a9eb;">:config</span>
+
+    (org-roam-setup)
+    <span style="color: #72696a;">;; </span><span style="color: #72696a;">If using org-roam-protocol</span>
+    (<span style="color: #85dacc;">require</span> '<span style="color: #a8a9eb;">org-roam-protocol</span>))
+    (<span style="color: #85dacc;">setq</span> org-roam-v2-ack t)
+</pre>
+</div>
+
+<p>
+Also let us include the <code>org-roam-ui</code> package, that uses <a href="./websocket.html">websocket</a>,
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #72696a;">;; </span><span style="color: #72696a;">also requires simple-httpd</span>
+(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">simple-httpd</span>
+  <span style="color: #a8a9eb;">:ensure</span> t)
+<span style="color: #72696a;">;; </span><span style="color: #72696a;">currently not on MEPLA yet so manually install located at .emacs.d/private</span>
+(<span style="color: #85dacc;">require</span> '<span style="color: #a8a9eb;">websocket</span>)
+(add-to-list 'load-path <span style="color: #f9cc6c;">"~/.emacs.d/private/org-roam-ui"</span>)
+(load-library <span style="color: #f9cc6c;">"org-roam-ui"</span>)
+</pre>
+</div>
+
+<p>
+I also want to be able to have firm referencing that allows for back propagating through texts (particularly if they are digital).
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">helm-bibtex</span>
+  <span style="color: #a8a9eb;">:ensure</span> t)
+
+
+(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org-ref</span>
+  <span style="color: #a8a9eb;">:ensure</span> t
+  <span style="color: #a8a9eb;">:config</span>
+  (<span style="color: #85dacc;">require</span> '<span style="color: #a8a9eb;">doi-utils</span>)
+  (<span style="color: #85dacc;">require</span> '<span style="color: #a8a9eb;">org-ref-isbn</span>)
+  (<span style="color: #85dacc;">setq</span> reftex-default-bibliography '(<span style="color: #f9cc6c;">"~/biblio/references.bib"</span>))
+  (<span style="color: #85dacc;">setq</span> org-ref-default-bibliography '(<span style="color: #f9cc6c;">"~/biblio/references.bib"</span>)
+        org-ref-pdf-directory <span style="color: #f9cc6c;">"~/research"</span>)
+
+  (<span style="color: #85dacc;">setq</span> bibtex-completion-bibliography <span style="color: #f9cc6c;">"~/biblio/references.bib"</span>
+        bibtex-completion-library-path <span style="color: #f9cc6c;">"~/research"</span>
+        bibtex-completion-notes-path <span style="color: #f9cc6c;">"~/org-roam"</span>))
+
+
+(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org-roam-bibtex</span>
+  <span style="color: #a8a9eb;">:ensure</span> t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6b9f177" class="outline-3">
+<h3 id="org6b9f177"><span class="section-number-3">1.2</span> org-download</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org-download</span> <span style="color: #a8a9eb;">:ensure</span> t
+<span style="color: #a8a9eb;">:config</span>
+(<span style="color: #85dacc;">require</span> '<span style="color: #a8a9eb;">org-download</span>
+(add-hook 'dired-mode-hook 'org-download-enable)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb02b7b6" class="outline-3">
+<h3 id="orgb02b7b6"><span class="section-number-3">1.3</span> org-bullets</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org-bullets</span> <span style="color: #a8a9eb;">:ensure</span> t
+<span style="color: #a8a9eb;">:config</span>
+(<span style="color: #85dacc;">require</span> '<span style="color: #a8a9eb;">org-bullets</span>))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf2ea24e" class="outline-3">
+<h3 id="orgf2ea24e"><span class="section-number-3">1.4</span> org-cliplink</h3>
+<div class="outline-text-3" id="text-1-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #85dacc;">use-package</span> <span style="color: #a8a9eb;">org-cliplink</span> <span style="color: #a8a9eb;">:ensure</span> t
+)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc112a44" class="outline-3">
+<h3 id="orgc112a44"><span class="section-number-3">1.5</span> org-agenda (General GTD Organization)</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">  (<span style="color: #85dacc;">setq</span> org-agenda-files '(<span style="color: #f9cc6c;">"~/gtd/inbox.org"</span>
+                          <span style="color: #f9cc6c;">"~/gtd/gtd.org"</span>
+                          <span style="color: #f9cc6c;">"~/gtd/tickler.org"</span>))
+
+  (<span style="color: #85dacc;">setq</span> org-capture-templates '((<span style="color: #f9cc6c;">"t"</span> <span style="color: #f9cc6c;">"Todo [inbox]"</span> entry
+                                 (file+headline <span style="color: #f9cc6c;">"~/gtd/inbox.org"</span> <span style="color: #f9cc6c;">"Tasks"</span>)
+                                 <span style="color: #f9cc6c;">"* TODO %i%?"</span>)
+                                (<span style="color: #f9cc6c;">"T"</span> <span style="color: #f9cc6c;">"Tickler"</span> entry
+                                 (file+headline <span style="color: #f9cc6c;">"~/gtd/tickler.org"</span> <span style="color: #f9cc6c;">"Tickler"</span>)
+                                 <span style="color: #f9cc6c;">"* %i%? \n %U"</span>)))
+
+  (<span style="color: #85dacc;">setq</span> org-refile-targets '((<span style="color: #f9cc6c;">"~/gtd/gtd.org"</span> <span style="color: #a8a9eb;">:maxlevel</span> . 3)
+                             (<span style="color: #f9cc6c;">"~/gtd/someday.org"</span> <span style="color: #a8a9eb;">:level</span> . 1)
+                             (<span style="color: #f9cc6c;">"~/gtd/tickler.org"</span> <span style="color: #a8a9eb;">:maxlevel</span> . 2)))
+<span style="color: #72696a;">; </span><span style="color: #72696a;">Pressing C-c C-t sets the TODO keyword.</span>
+  (<span style="color: #85dacc;">setq</span> org-todo-keywords '((sequence <span style="color: #f9cc6c;">"TODO(t)"</span> <span style="color: #f9cc6c;">"WAITING(w)"</span> <span style="color: #f9cc6c;">"|"</span> <span style="color: #f9cc6c;">"DONE(d)"</span> <span style="color: #f9cc6c;">"CANCELLED(c)"</span>)))
+
+  (<span style="color: #85dacc;">setq</span> org-agenda-custom-commands 
+        '((<span style="color: #f9cc6c;">"o"</span> <span style="color: #f9cc6c;">"At the office"</span> tags-todo <span style="color: #f9cc6c;">"@office"</span>
+           ((org-agenda-overriding-header <span style="color: #f9cc6c;">"Office"</span>)
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))))
+
+  (<span style="color: #85dacc;">defun</span> <span style="color: #adda78;">my-org-agenda-skip-all-siblings-but-first</span> ()
+    <span style="color: #958e8f;">"Skip all but the first non-done entry."</span>
+    (<span style="color: #85dacc;">let</span> (should-skip-entry)
+      (<span style="color: #85dacc;">unless</span> (org-current-is-todo)
+        (<span style="color: #85dacc;">setq</span> should-skip-entry t))
+      (<span style="color: #85dacc;">save-excursion</span>
+        (<span style="color: #85dacc;">while</span> (<span style="color: #85dacc;">and</span> (not should-skip-entry) (org-goto-sibling t))
+          (<span style="color: #85dacc;">when</span> (org-current-is-todo)
+            (<span style="color: #85dacc;">setq</span> should-skip-entry t))))
+      (<span style="color: #85dacc;">when</span> should-skip-entry
+        (<span style="color: #85dacc;">or</span> (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (<span style="color: #85dacc;">defun</span> <span style="color: #adda78;">org-current-is-todo</span> ()
+    (string= <span style="color: #f9cc6c;">"TODO"</span> (org-get-todo-state)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3603b27" class="outline-3">
+<h3 id="org3603b27"><span class="section-number-3">1.6</span> Export Settings for LaTeX</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-latex-classes
+           '(<span style="color: #f9cc6c;">"standard"</span>
+                 <span style="color: #f9cc6c;">"\\documentclass{article}</span>
+<span style="color: #f9cc6c;">                  \\usepackage[margin=0.8in]{geometry}</span>
+<span style="color: #f9cc6c;">                  \\displaymode</span>
+<span style="color: #f9cc6c;">                  \\usepackage{parskip}</span>
+<span style="color: #f9cc6c;">                  \\usepackage{amsmath} </span>
+<span style="color: #f9cc6c;">                  \\usepackage{import}</span>
+<span style="color: #f9cc6c;">                  \\usepackage{xifthen}</span>
+<span style="color: #f9cc6c;">                  \\usepackage{pdfpages}</span>
+<span style="color: #f9cc6c;">                  \\usepackage{transparent}</span>
+<span style="color: #f9cc6c;">                  \\usepackage{hyperref}</span>
+<span style="color: #f9cc6c;">                  \\newcommand{\\incfic}[1]{%</span>
+<span style="color: #f9cc6c;">                      \\def\svgwidth{\\columnwidth}</span>
+<span style="color: #f9cc6c;">                      \\import{./figures/}{#1.pdf_tex}}</span>
+<span style="color: #f9cc6c;">                  [NO-DEFAULT-PACKAGES]</span>
+<span style="color: #f9cc6c;">                  [NO-PACKAGES]"</span>
+                 (<span style="color: #f9cc6c;">"\\section*{%s}"</span> . <span style="color: #f9cc6c;">"\\section*{%s}"</span>)
+               (<span style="color: #f9cc6c;">"\\subsection*{%s}"</span> . <span style="color: #f9cc6c;">"\\subsection*{%s}"</span>)
+               (<span style="color: #f9cc6c;">"\\subsubsection*{%s}"</span> . <span style="color: #f9cc6c;">"\\subsubsection*{%s}"</span>)
+               (<span style="color: #f9cc6c;">"\\paragraph*{%s}"</span> . <span style="color: #f9cc6c;">"\\paragraph*{%s}"</span>)
+               (<span style="color: #f9cc6c;">"\\subparagraph*{%s}"</span> . <span style="color: #f9cc6c;">"\\subparagraph*{%s}"</span>)))
+</pre>
+</div>
+</div>
+</div>
+</div>

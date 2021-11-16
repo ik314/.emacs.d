@@ -1,0 +1,23 @@
+#+TITLE: Perspective.
+#+AUTHOR: Ismael Khan
+
+At the moment I don't know exactly what to do with perspective so I shall *embrace the buffer list*. Remember file names.
+#+BEGIN_SRC elisp
+;;      (use-package perspective
+;;        :ensure t
+;;        :config
+;;        (persp-mode))
+#+END_SRC
+
+
+
+#+BEGIN_SRC elisp
+    (use-package persp-mode
+    :ensure t)
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
+

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Gamma
+# key: Gam
+# --
+Gam_{$1}^{$2}

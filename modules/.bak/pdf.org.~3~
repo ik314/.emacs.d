@@ -1,0 +1,14 @@
+#+TITLE: PDF configurations for Emacs
+#+AUTHOR:
+
+* PDF Tools
+A *much* better way to view PDFs compared to DocView.
+#+BEGIN_SRC emacs-lisp
+    (use-package pdf-tools
+    :ensure t
+    :config
+    (pdf-tools-install)
+    (add-hook 'pdf-view-mode-hook '(lambda () (linum-mode -1))))
+#+END_SRC
+
+

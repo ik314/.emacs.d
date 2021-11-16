@@ -1,0 +1,11 @@
+#+TITLE: Perspective.
+#+AUTHOR: Ismael Khan
+
+#+BEGIN_SRC elisp
+  (use-package perspective
+    :bind
+    ("C-x C-b" . persp-list-buffers)
+    :config
+    (persp-mode))
+#+END_SRC
+

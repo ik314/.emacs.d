@@ -1,0 +1,29 @@
+#+TITLE: Perspective.
+#+AUTHOR: Ismael Khan
+
+At the moment I don't know exactly what to do with perspective so I shall *embrace the buffer list*. Remember file names.
+#+BEGIN_SRC elisp
+;;      (use-package perspective
+;;        :ensure t
+;;        :config
+;;        (persp-mode))
+#+END_SRC
+
+
+
+#+BEGIN_SRC elisp
+  (add-to-list 'load-path "~/.emacs.d/private/workgroups.el")
+  (load-library "workgroups.el")
+  (require 'workgroups)
+  (use-package persp-mode
+  :ensure t
+  :config  (with-eval-after-load "persp-mode-autoloads"
+      (setq wg-morph-on nil) ;; switch off animation
+      (setq persp-autokill-buffer-on-remove 'kill-weak)
+      (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
+  )
+
+#+END_SRC
+
+
+
