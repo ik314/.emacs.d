@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: subseteq
-# key: sse
-# --
-$1 \subseteq $2

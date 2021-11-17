@@ -1,9 +1,0 @@
-#+TITLE: Dynamic Usage of Emacs over larger the OS
-#+AUTHOR: Ismael Khan
-
-#+BEGIN_SRC emacs-lisp
-  (use-package emacs-everywhere
-     :ensure t)
-#+END_SRC
-
-#+RESULTS:

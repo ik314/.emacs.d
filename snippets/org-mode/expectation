@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: expectation
-# key: expe
-# --
-\mathbb{E}\left( $1 \right)

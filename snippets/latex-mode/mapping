@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: mapping
-# key: map
-# --
-${1:x} \mapsto $2

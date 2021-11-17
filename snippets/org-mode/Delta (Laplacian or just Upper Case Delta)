@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Delta (Laplacian or just Upper Case Delta)
-# key: Del
-# --
-\Delta_{$1}^{$2}

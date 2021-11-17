@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: integral from -inf to +inf
-# key:  intinf
-# --
-\int_{-\infty}^\infty $1

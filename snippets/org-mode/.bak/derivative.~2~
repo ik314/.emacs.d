@@ -1,4 +1,0 @@
-# key: der
-# name: derivative
-# --
-\frac{d$1^{${2:}}}{d^{$2}$3}

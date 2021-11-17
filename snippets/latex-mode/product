@@ -1,4 +1,0 @@
-# key: prod
-# name: product
-# --
-\prod_{${1:n=$2}}^{${3:\infty}} $4

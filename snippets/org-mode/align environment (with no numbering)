@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: align environment (with no numbering)
-# key: ali*
-# --
-\begin{align*}
-$1
-\end{align*}

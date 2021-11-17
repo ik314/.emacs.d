@@ -1,4 +1,0 @@
-# key: left
-# name: dynamic sizing brackets
-# --
-\left${1:(} $2 \right${3:)}

@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: dynamic sizing brackets
-# key: left
-# --
-\left$1 $2 \right$1
