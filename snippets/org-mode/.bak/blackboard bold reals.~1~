@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: blackboard bold reals
+# key: rr
+# --
+\mathbb{R}

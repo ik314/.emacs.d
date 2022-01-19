@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: function
+# key: fn
+# --
+${1:f} : ${2:[$3,$4]} \to $5

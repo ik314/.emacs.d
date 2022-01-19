@@ -1,0 +1,4 @@
+# key: der
+# name: derivative
+# --
+\frac{d^{${2:}}$1}{d$3^{$2}}

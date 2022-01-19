@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: poisson
+# key: psn
+# --
+\text{Poisson}\left( $1 \right)

@@ -1,0 +1,4 @@
+# key: mc
+# name: mathcal
+# --
+\mathcal{$1}

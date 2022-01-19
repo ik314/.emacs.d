@@ -22,7 +22,7 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 13))
+      doom-variable-pitch-font (font-spec :family "sans-serif" :size 12))
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -69,24 +69,113 @@
       (unless (buffer-live-p old-buffer)
         (make-indirect-buffer new-buffer old-buffer 'clone))))
 
+(defun find-next-action (pos)
+  (search-forward "Next-Actions")
+)
+
+(defun get-proj-headlines (level)
+  (completing-read "Prompt" (org-map-entries (lambda () (org-element-property :title
+                                                                              (org-element-at-point)) ) level)))
+(defun get-header-pos (title)
+  (goto-char (point-min))
+  (search-forward title)
+  (org-narrow-to-subtree))
+
+(defun project-finder ()
+  (let*
+      ((pos (save-window-excursion
+             (find-file "~/org/proj.org")
+             (goto-char (point-min))
+             (+org/close-all-folds)
+             (search-forward (get-proj-headlines "LEVEL=1"))
+             (point)))
+       (proj-pos (save-window-excursion
+            (find-file "~/org/proj.org")
+            (goto-char pos)
+            (org-narrow-to-subtree)
+            (get-header-pos (get-proj-headlines "LEVEL=2"))
+            (find-next-action (point)))))
+    (widen)
+    proj-pos
+    ))
+
+(defun narrow-project ()
+  (interactive)
+  ;; Widen if haven't already
+  (widen)
+  (goto-char (get-header-pos(get-proj-headlines "LEVEL=1")))
+  (org-narrow-to-subtree)
+  )
+
+(map! (:leader
+       :prefix "r"
+       :desc "Narrow projects" "n" #'narrow-project))
 (after! org
-  ;; I only really need to capture ideas into an inbox, the refiling is part of the process.
-  ;; The only exception may be things I immediately wanna chuck in my calendar (i.e appointments or events)
-  ;; So they can go directly into a "reminder" file.
+  ;; For some reason, flags such as %^g and %{PROMPT} are being problematic and causing max-depth errors. Don't know if its
+  ;; from my dodgy hacking or an error with the template.
   (setq org-capture-templates
       '(("i" "Inbox" entry
-        (file+datetree "~/org/gtd/inbox.org")
-        "* TODO %^{Description}  %^g\n%?\nAdded: %U")
+        (file+headline "~/org/inbox.org" "Inbox")
+        "* %? \nAdded: %U")
         ("c" "Calendar Events" entry
-        (file+datetree "~/org/gtd/calendar.org")
-        "* %^{Description} %^g\n%?\nAdded: %U\n%(org-time-stamp nil)")
+        (file+datetree "~/org/calendar.org")
+        "* %? \n\nAdded: %U\nSCHEDULED: %(org-time-stamp nil)")
         ("n" "Notes" entry
          (file+datetree "~/org/ideas.org")
-         "* %^{Description} %^g %?\nAdded: %U"))))
+         "* %? \nAdded: %U")
+        ("j" "Journal" entry
+         (file+olp+datetree "~/org/brian.org.gpg")
+         "* %U \n%?")
+        ("p" "Projects" entry
+         (file+function "~/org/proj.org" project-finder)
+         "* %?"))))
 
+(after! pdf-tools
+  (pdf-tools-install))
+
+
+(after! org-projectile
+  ;; Don't know why this is currently broken.
+  (setq org-projectile-projects-file "~/org/proj.org")
+  (org-projectile-project-todo-entry)
+  (push (org-projectile-project-todo-entry) org-capture-templates)
+  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+  (setq org-refile-targets '((org-agenda-files)) :maxlevel . 4)
+  (map! (:leader
+         :prefix "p"
+         :desc "Capture to a project" "n" #'org-projectile-project-todo-completing-read)))
+
+(after! yasnippet
+  (setq yas-triggers-in-field t))
+
+(after! org-gcal
+  ;; This is private so be careful when pushing to repo.
+  (setq org-gcal-client-id "954183498626-78c6rv7ndnmuj88ue3nbgaqis5jt6oj3.apps.googleusercontent.com"
+        org-gcal-client-secret "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"
+        org-gcal-file-alist '(("leamsi297@gmail.com" . "~/org/calendar.org"))))
   ;; I've always thought about an interface of org-agenda with many other organizational tools, mainly
   ;; Notion.so and the Google Ecosystem. org-gcal provides a good way to sync to my Calendars but
   ;; Notion has recently released its API and I don't know how well to interface through that.
 
   ;; My initial idea would probably be to interface the org files themselves rather than anything immediately
   ;; from Emacs and Org, it won't be dependent on the emacs client but the files themselves.
+
+
+(after! web-mode
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+
+
+;; Ideally get all top level headers of org files to represent different subcategories of projects.
+;; Then use that choose where to add the header...
+;;
+;; Found out this is done with completing-read function.
+
+(defvar projects-list
+  '(("General" 1) ("Safe Radiation" 2) ("University" 3)))
