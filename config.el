@@ -148,11 +148,8 @@
 (after! yasnippet
   (setq yas-triggers-in-field t))
 
-(after! org-gcal
+(after! org-gcal)
   ;; This is private so be careful when pushing to repo.
-  (setq org-gcal-client-id "954183498626-78c6rv7ndnmuj88ue3nbgaqis5jt6oj3.apps.googleusercontent.com"
-        org-gcal-client-secret "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"
-        org-gcal-file-alist '(("leamsi297@gmail.com" . "~/org/calendar.org"))))
   ;; I've always thought about an interface of org-agenda with many other organizational tools, mainly
   ;; Notion.so and the Google Ecosystem. org-gcal provides a good way to sync to my Calendars but
   ;; Notion has recently released its API and I don't know how well to interface through that.
